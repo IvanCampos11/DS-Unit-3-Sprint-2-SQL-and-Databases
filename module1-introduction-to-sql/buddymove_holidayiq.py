@@ -19,7 +19,7 @@ NAT_AND_SHOP_OVER = """SELECT count(Nature) NatureOver100
  FROM  buddymove_holidayiq
  WHERE Nature > 100
  AND Shopping > 100;"""
- 
+
 
 if __name__ == "__main__":
     conn = connect_to_db()
