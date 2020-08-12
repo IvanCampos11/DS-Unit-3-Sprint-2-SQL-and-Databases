@@ -1,7 +1,10 @@
 import pandas as pd
 import psycopg2
+from psycopg2.extras import execute_values
 
-titanic = pd.read_csv('titanic.csv').rename({
+url = 'https://raw.githubusercontent.com/IvanCampos11/DS-Unit-3-Sprint-2-SQL-and-Databases/master/module2-sql-for-analysis/titanic.csv'
+
+titanic = pd.read_csv(url).rename({
     "Siblings/Spouces Aboard": "Siblings_Spouses_Aboard",
     "Parents/Children Aboard": "Parents_Children_Aboard",
 }, axis=1)
@@ -28,18 +31,25 @@ CREATE TABLE titanic (
   Siblings_Spouses_Aboard INT,
   Parents_Children_Aboard INT,
   Fare FLOAT
-);
+)
 """
 
+
 if __name__ == "__main__":
+
+    titanic = pd.read_csv(url).rename({
+        "Siblings/Spouces Aboard": "Siblings_Spouses_Aboard",
+        "Parents/Children Aboard": "Parents_Children_Aboard",
+    }, axis=1)
+    titanic['Name'] = titanic['Name'].str.replace("'", "")
+
     pg_curs.execute(create_titanic_table)
     pg_conn.commit()
-    for character in titanic:
-        insert_character = """
-          INSERT INTO charactercreator_character
-          (Survived, Pclass, Name, Sex, Age, Siblings_Spouses_Aboard, Parents_Children_Aboard)
-          VALUES """ + str(titanic[1:]) + ";"
-        pg_curs.execute(insert_character)
+    execute_values(pg_curs, """
+    INSERT INTO titanic
+    (Survived, Pclass, Name, Sex, Age, Siblings_Spouses_Aboard,Parents_Children_Aboard,Fare)
+    VALUES %s;
+    """, [tuple(row) for row in titanic.values])
     pg_conn.commit()
     pg_curs.close()
     pg_conn.close()
