@@ -1,3 +1,12 @@
+# The flow is somewhat similar but in my personal opinion
+# Working in MongoDB is a lot easier than PostgresSQL since i have to
+# write less code and i understood the process better.
+
+# The easier part was writing less code with better understanding
+# The harder part is that for PostgreSQL its all in one table but as
+# for MongoDB, it's all inserted one by one so it's harder to find and
+# see a database.
+
 import pymongo
 import sqlite3
 
